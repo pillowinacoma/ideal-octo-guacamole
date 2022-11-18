@@ -34,6 +34,6 @@ model Room {
   number       Int
   area         Float
   price        Int
-  apartement   Apartement @relation(fields: [apartementId], references: [id])
+  apartement   Apartement @relation(fields: [apartementId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   apartementId Int
 }
