@@ -14,11 +14,12 @@ import {
   getApartementInputSchema,
   updateApartementInputSchema,
 } from './apartement/schema'
-import { createRoom, deleteRoom, getRoom, updateRoom } from './room'
+import { createRoom, deleteRoom, getRoom, makeReservation, updateRoom } from './room'
 import {
   createRoomInputSchema,
   deleteRoomInputSchema,
   getRoomInputSchema,
+  makeReservationInputSchema,
   updateRoomInputSchema,
 } from './room/schema'
 
@@ -36,5 +37,6 @@ router.get('/room/:id', validate(getRoomInputSchema), getRoom)
 router.post('/room', validate(createRoomInputSchema), createRoom)
 router.put('/room/:id', validate(updateRoomInputSchema), updateRoom)
 router.delete('/room/:id', validate(deleteRoomInputSchema), deleteRoom)
+router.post('/room/:id/make-reservation', validate(makeReservationInputSchema), makeReservation)
 
 export default router

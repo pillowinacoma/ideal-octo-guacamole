@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { RequestHandler } from 'express'
 import { z } from 'zod'
 import { RHWithBody, RHWithParams } from '../../types'
-import { deleteRoomInputSchema, updateRoomInputSchema } from './schema'
+import { deleteRoomInputSchema, makeReservationInputSchema, updateRoomInputSchema } from './schema'
 import { createRoomInputSchema } from './schema/create-room'
 import { getRoomInputSchema } from './schema/get-room'
 import { handleError } from './utils'
@@ -123,4 +123,31 @@ export const deleteRoom: RHWithParams<deleteRoomParamsType> = async (req, res) =
     .catch(handleError(res))
   if (deletedRoom) res.status(201).send({ room: deletedRoom })
   else res.status(500).send()
+}
+
+type makeReservationParamsType = z.infer<typeof makeReservationInputSchema>['params']
+type makeReservationBodyType = z.infer<typeof makeReservationInputSchema>['body']
+export const makeReservation: RequestHandler<
+  makeReservationParamsType,
+  {},
+  makeReservationBodyType
+> = async (req, res) => {
+  const { id } = req.params
+  const { email } = req.body
+
+  const reservation = await prisma.reservation
+    .create({
+      data: {
+        userEmail: email,
+        roomId: Number(id),
+      },
+      include: {
+        room: true,
+        user: true,
+      },
+    })
+    .catch(handleError(res))
+
+  if (reservation) res.status(201).send({ reservation })
+  else res.status(400).send()
 }
