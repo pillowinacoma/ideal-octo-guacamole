@@ -20,6 +20,13 @@ import {
 } from './apartement'
 import { getApartementInputSchema } from './apartement/schema'
 import { getUserWithEmailSchema } from './user/schema/get-user'
+import { createRoom, deleteRoom, getRoom, updateRoom } from './room'
+import {
+  createRoomInputSchema,
+  deleteRoomInputSchema,
+  getRoomInputSchema,
+  updateRoomInputSchema,
+} from './room/schema'
 
 const router = express.Router()
 
@@ -31,6 +38,9 @@ router.get('/apartement/:id', validate(getApartementInputSchema), getApartement)
 router.post('/apartement', validate(createApartementInputSchema), createApartement)
 router.put('/apartement', validate(updateApartementInputSchema), updateApartement)
 router.delete('/apartement', validate(deleteApartementInputSchema), deleteApartement)
-// router.post('/room', validate(createApartementInputSchema), createApartement)
+router.get('/room/:id', validate(getRoomInputSchema), getRoom)
+router.post('/room/', validate(createRoomInputSchema), createRoom)
+router.put('/room/:id', validate(updateRoomInputSchema), updateRoom)
+router.delete('/room/:id', validate(deleteRoomInputSchema), deleteRoom)
 
 export default router
