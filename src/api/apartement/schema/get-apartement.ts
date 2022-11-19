@@ -4,7 +4,7 @@ const idSchema = z
   .string({
     required_error: 'a valid appartenet id is required',
   })
-  .regex(/^[0-9]$/)
+  .regex(/^[0-9]+$/)
 
 export const getApartementInputSchema = z.object({
   params: z
