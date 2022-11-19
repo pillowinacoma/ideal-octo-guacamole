@@ -1,20 +1,20 @@
 import { z } from 'zod'
-import { isZipCode } from '../utils'
+import { regExIsFloat } from '../utils'
+import { regExIsZipCode } from '../utils'
 
-const nameSchema = z.string({
-  required_error: 'name is required',
-})
-const streetSchema = z.string({
-  required_error: 'street is required',
-})
-const zipCodeSchema = z
-  .string({
-    required_error: 'zipCode is required',
+const nameSchema = z.string()
+const streetSchema = z.string()
+const zipCodeSchema = z.string().regex(regExIsZipCode)
+const citySchema = z.string()
+const roomsSchema = z
+  .object({
+    number: z.number(),
+    area: z.string().regex(regExIsFloat),
+    price: z.number(),
   })
-  .regex(isZipCode)
-const citySchema = z.string({
-  required_error: 'city is required',
-})
+  .array()
+  .nonempty()
+
 export const createApartementInputSchema = z.object({
   body: z
     .object({
@@ -22,6 +22,7 @@ export const createApartementInputSchema = z.object({
       street: streetSchema,
       zipCode: zipCodeSchema,
       city: citySchema,
+      rooms: roomsSchema,
     })
     .strict(),
 })

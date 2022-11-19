@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { z } from 'zod'
 import { RHWithBody, RHWithParams } from '../../types'
-import { omit } from 'lodash'
 import {
   createApartementInputSchema,
   deleteApartementInputSchema,
@@ -15,11 +14,16 @@ const prisma = new PrismaClient()
 
 type createApartementBodyType = z.infer<typeof createApartementInputSchema>['body']
 export const createApartement: RHWithBody<createApartementBodyType> = async (req, res) => {
+  const { rooms, ...rest } = req.body
   const apartement = await prisma.apartement
     .create({
       data: {
-        ...omit(req.body),
+        ...rest,
+        Room: {
+          create: rooms.map((e) => ({ ...e, area: parseFloat(e.area) })),
+        },
       },
+      include: { Room: {} },
     })
     .catch(handleError(res))
 
@@ -47,7 +51,7 @@ export const updateApartement: RequestHandler<
   updateApartementBodyType
 > = async (req, res) => {
   const { id } = req.params
-  const { ...rest } = req.body
+  const { rooms, ...rest } = req.body
   const apartement = await prisma.apartement
     .update({
       where: {
@@ -55,7 +59,11 @@ export const updateApartement: RequestHandler<
       },
       data: {
         ...rest,
+        Room: {
+          create: rooms?.map((e) => ({ ...e, area: parseFloat(e.area) })) ?? [],
+        },
       },
+      include: { Room: {} },
     })
     .catch(handleError(res))
   if (apartement) res.status(201).send({ apartement })
@@ -69,6 +77,7 @@ export const getApartement: RHWithParams<getApartementParamsType> = async (req, 
       where: {
         id: Number(id),
       },
+      include: { Room: {} },
     })
     .catch(handleError(res))
   if (apartement) res.status(201).send({ apartement })
