@@ -17,7 +17,7 @@ const prisma = new PrismaClient()
 type getRoomInputType = z.infer<typeof getRoomInputSchema>['params']
 export const getRoom: RHWithParams<getRoomInputType> = async (req, res) => {
   const { id } = req.params
-  const room = await prisma.apartement
+  const room = await prisma.room
     .findUnique({
       where: {
         id: Number(id),
@@ -175,7 +175,6 @@ export const deleteReservation: RequestHandler<deleteReservationParamsType, {}, 
       },
     })
     .catch(handleError(res))
-
   if (reservation) res.status(201).send({ reservation })
   else res.status(500).send()
 }
