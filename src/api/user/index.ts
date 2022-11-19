@@ -54,7 +54,6 @@ export const deleteUser: RHWithParams<deleteUserParamsType> = async (req, res) =
 }
 
 type getUserParamsType = z.infer<typeof getUserInputSchema>['params']
-
 export const getUser: RHWithParams<getUserParamsType> = async (req, res) => {
   const { email } = req.params
 
