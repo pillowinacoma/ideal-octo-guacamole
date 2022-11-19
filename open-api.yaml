@@ -351,7 +351,7 @@ paths:
     delete:
       tags:
         - Reservation
-      summary:  Delete Reservation
+      summary: Delete Reservation
       operationId: deleteReservation
       responses:
         '200':
@@ -436,6 +436,29 @@ components:
         apartementId:
           type: number
           example: 4
+    IDlessUser:
+      type: object
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+          example: John
+        lastName:
+          type: string
+          minLength: 1
+          example: Smith
+        phone:
+          type: string
+          example: 0607080504
+        email:
+          $ref: '#/components/schemas/Email'
+        birthDate:
+          type: string
+          format: date
+          example: '2002-10-11'
+        nationality:
+          type: string
+          example: 'american'
     IDlessRoom:
       type: object
       properties:
@@ -537,29 +560,6 @@ components:
           example: 4
         Apartement:
           $ref: '#/components/schemas/Apartement'
-    IDlessUser:
-      type: object
-      properties:
-        firstName:
-          type: string
-          minLength: 1
-          example: John
-        lastName:
-          type: string
-          minLength: 1
-          example: Smith
-        phone:
-          type: string
-          example: 0607080504
-        email:
-          $ref: '#/components/schemas/Email'
-        birthDate:
-          type: string
-          format: date
-          example: '2002-10-11'
-        nationality:
-          type: string
-          example: 'american'
     IDlessRelationalApartement:
       type: object
       properties:
@@ -575,10 +575,10 @@ components:
         city:
           type: string
           example: Lyon
-        Room:
+        rooms:
           type: array
           items:
-            $ref: '#/components/schemas/Room'
+            $ref: '#/components/schemas/IDlessRoom'
     IDlessRelationalRoom:
       type: object
       properties:
