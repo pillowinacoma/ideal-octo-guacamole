@@ -46,7 +46,31 @@ export const updateRoom: RequestHandler<updateRoomParamsType, {}, updateRoomBody
 ) => {
   const { id } = req.params
   const { area, ...rest } = req.body
-  const room = await prisma.room
+
+  const room = await prisma.room.findUnique({
+    where: { id: Number(id) },
+    include: {
+      apartement: {
+        include: { _count: { select: { Room: true } } },
+      },
+    },
+  })
+  if (!room) {
+    res.status(404).send()
+    return
+  }
+
+  const { apartement } = room
+  if (!apartement) {
+    res.status(500).send('Room has no apartement')
+    return
+  }
+  if (apartement._count.Room < 2 && rest.apartementId) {
+    res.status(400).send("You can't move only room in the apartement")
+    return
+  }
+
+  const updatedRoom = await prisma.room
     .update({
       where: {
         id: Number(id),
@@ -57,20 +81,46 @@ export const updateRoom: RequestHandler<updateRoomParamsType, {}, updateRoomBody
       },
     })
     .catch(handleError(res))
-  if (room) res.status(201).send({ room })
+  if (updatedRoom) res.status(201).send({ room: updatedRoom })
   else res.status(500).send()
 }
 
 type deleteRoomParamsType = z.infer<typeof deleteRoomInputSchema>['params']
 export const deleteRoom: RHWithParams<deleteRoomParamsType> = async (req, res) => {
   const { id } = req.params
-  const room = await prisma.room
+
+  const room = await prisma.room.findUnique({
+    where: { id: Number(id) },
+    include: {
+      apartement: {
+        include: {
+          _count: { select: { Room: true } },
+        },
+      },
+    },
+  })
+  if (!room) {
+    res.status(404).send()
+    return
+  }
+
+  const { apartement } = room
+  if (!apartement) {
+    res.status(500).send('Room has no apartement')
+    return
+  }
+  if (apartement._count.Room < 2) {
+    res.status(400).send("You can't delete only room in the apartement")
+    return
+  }
+
+  const deletedRoom = await prisma.room
     .delete({
       where: {
         id: Number(id),
       },
     })
     .catch(handleError(res))
-  if (room) res.status(201).send({ room })
+  if (deletedRoom) res.status(201).send({ room: deletedRoom })
   else res.status(500).send()
 }
