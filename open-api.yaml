@@ -1,0 +1,625 @@
+# This is an **example** API to demonstrate features of OpenAPI specification.
+# It doesn't cover all OpenAPI features. For more full example check out: https://github.com/APIs-guru/petstore_extended
+
+openapi: 3.0.2
+info:
+  version: '1.0.0' # Your API version
+  # It can be any string but it is better to use semantic versioning: http://semver.org/
+  # Warning: OpenAPI requires the version to be a string, but without quotation marks YAML can recognize it as a number.
+
+  title: ideal-octo-guacamole # Replace with your API title
+  # Keep it simple. Don't add "API" or version at the end of the string.
+
+  # Describe your API here, you can use GFM (https://guides.github.com/features/mastering-markdown) here
+  description: |
+    # Intro
+    This is a simple API that allows implements a simple room reservation system. It opens endpoints that allow CRUD operations on a User, a Room and appartement, in addition to making it possible to reserve a room through the room endpoint.
+
+    # Technologies
+    |||
+    |-|-|
+    |Language|TypeScript|
+    |Server|Node.js|
+    |Framework|Express|
+    |Schema Validation|Zod|
+    |Database|PostgreSQL|
+    |ORM & Database Client|Prisma|
+
+# A list of tags used by the definition with additional metadata.
+# The order of the tags can be used to reflect on their order by the parsing tools.
+tags:
+  - name: Apartement
+    description: CRUD Apartement operations
+  - name: User
+    description: CRUD User operations
+  - name: Room
+    description: CRUD Room operations
+  - name: Reservation
+    description: make and delete
+servers:
+  - url: 'https://ideal-octo-guacamole.onrender.com/api'
+  - url: 'localhost:3000/api'
+
+# Holds the relative paths to the individual endpoints. The path is appended to the
+# basePath in order to construct the full URL.
+paths:
+  '/user':
+    post:
+      tags:
+        - User
+      summary: Create user
+      operationId: createUser
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid user supplied
+        '404':
+          description: User not found
+      # request body documentation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IDlessUser'
+        description: Created user object, all body attributes are required
+        required: true
+  '/user/{email}': # path parameter in curly braces
+    get: # documentation for GET operation for this path
+      tags:
+        - User
+
+      # summary is up to 120 symbold but we recommend to be shortest as possible
+      summary: Get user by user name
+
+      # operationId should be unique across the whole specification
+      operationId: getUserByName
+
+      # list of parameters for the operation
+      parameters:
+        - name: email
+          in: path
+          description: user email
+          required: true
+          schema:
+            type: string
+
+      responses: # list of responses
+        '200':
+          description: Success
+          content:
+            application/json: # operation response mime type
+              schema: # response schema can be specified for each response
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request
+        '404':
+          description: Not found
+    # documentation for PUT operation for this path
+    put:
+      tags:
+        - User
+      summary: Updated user
+      operationId: updateUser
+      parameters:
+        - name: email
+          in: path
+          description: user email
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid user supplied
+        '404':
+          description: User not found
+      # request body documentation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IDlessUser'
+        description: Updated user object, all body attributes are optional
+        required: true
+    delete:
+      tags:
+        - User
+      summary: Delete user
+      operationId: deleteUser
+      parameters:
+        - name: email
+          in: path
+          description: user email
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid user supplied
+        '404':
+          description: User not found
+  /apartement:
+    post:
+      tags:
+        - Apartement
+      summary: Create Apartement
+      operationId: createApartement
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelationalApartement'
+        '400':
+          description: Invalid input supplied
+        '404':
+          description: Apartement not found
+      # request body documentation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IDlessRelationalApartement'
+        description: Created apartement object, all body attributes are required
+        required: true
+  '/apartement/{id}':
+    get:
+      tags:
+        - Apartement
+      summary: get Apartement
+      operationId: getApartement
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelationalApartement'
+        '400':
+          description: Invalid input supplied
+        '404':
+          description: Apartement not found
+    put:
+      tags:
+        - Apartement
+      summary: Update Apartement
+      operationId: updateApartement
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelationalApartement'
+        '400':
+          description: Invalid input supplied
+        '404':
+          description: Apartement not found
+      # request body documentation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IDlessRelationalApartement'
+        description: Updated apartement object, all body attributes are optional
+        required: true
+    delete:
+      tags:
+        - Apartement
+      summary: Delete Apartement
+      operationId: deleteApartement
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelationalApartement'
+        '400':
+          description: Invalid input supplied
+        '404':
+          description: Apartement not found
+  /room:
+    post:
+      tags:
+        - Room
+      summary: Create Room
+      operationId: createRoom
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        '400':
+          description: Invalid input supplied
+        '404':
+          description: Room not found
+      # request body documentation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IDlessRoom'
+        description: Created room object, all body attributes are required
+        required: true
+  '/room/{id}':
+    put:
+      tags:
+        - Room
+      summary: Update Room
+      operationId: updateRoom
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        '400':
+          description: Invalid input supplied
+        '404':
+          description: Room not found
+      # request body documentation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IDlessRoom'
+        description: Updated room object, all body attributes are optional
+        required: true
+    get:
+      tags:
+        - Room
+      summary: Get Room
+      operationId: getRoom
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        '400':
+          description: Invalid input supplied
+        '404':
+          description: Room not found
+    delete:
+      tags:
+        - Room
+      summary: Delete Room
+      operationId: deleteRoom
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        '400':
+          description: Invalid input supplied
+        '404':
+          description: Reservation not found
+  /room/{id}/reservation:
+    post:
+      tags:
+        - Reservation
+      summary: Create Reservation
+      operationId: createReservation
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelationalReservation'
+        '400':
+          description: Invalid input supplied
+        '404':
+          description: Room not found
+      # request body documentation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+
+        description: Created reservation object, all body attributes are required
+        required: true
+    delete:
+      tags:
+        - Reservation
+      summary:  Delete Reservation
+      operationId: deleteReservation
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelationalReservation'
+        '400':
+          description: Invalid input supplied
+        '404':
+          description: Reservation not found
+
+# An object to hold reusable parts that can be used across the definition
+components:
+  schemas:
+    Email:
+      description: User email address
+      type: string
+      format: test
+      example: john.smith@example.com
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 3
+        firstName:
+          type: string
+          minLength: 1
+          example: John
+        lastName:
+          type: string
+          minLength: 1
+          example: Smith
+        phone:
+          type: string
+          example: 0607080504
+        email:
+          $ref: '#/components/schemas/Email'
+        birthDate:
+          type: string
+          format: date
+          example: '2002-10-11'
+        nationality:
+          type: string
+          example: 'american'
+    Apartement:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 3
+        street:
+          type: string
+          example: Street
+        name:
+          type: string
+          example: House
+        zipCode:
+          type: string
+          example: 9868756
+        city:
+          type: string
+          example: Lyon
+    Room:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 3
+        number:
+          type: number
+          example: 3
+        area:
+          type: string
+          format: Float
+          example: '3.5'
+        price:
+          type: number
+          example: 300
+        apartementId:
+          type: number
+          example: 4
+    IDlessRoom:
+      type: object
+      properties:
+        number:
+          type: number
+          example: 3
+        area:
+          type: string
+          format: Float
+          example: '3.5'
+        price:
+          type: number
+          example: 300
+        apartementId:
+          type: number
+          example: 4
+    RelationalReservation:
+      type: object
+      properties:
+        room:
+          $ref: '#/components/schemas/Room'
+        roomId:
+          type: number
+          example: 3
+        user:
+          $ref: '#/components/schemas/User'
+        userEmail:
+          $ref: '#/components/schemas/Email'
+    RelationalUser:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 3
+        firstName:
+          type: string
+          minLength: 1
+          example: John
+        lastName:
+          type: string
+          minLength: 1
+          example: Smith
+        phone:
+          type: string
+          example: 0607080504
+        email:
+          $ref: '#/components/schemas/Email'
+        birthDate:
+          type: string
+          format: date
+          example: '2002-10-11'
+        nationality:
+          type: string
+          example: 'american'
+        Reservation:
+          type: array
+          items:
+            $ref: '#/components/schemas/Room'
+    RelationalApartement:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 3
+        street:
+          type: string
+          example: Street
+        name:
+          type: string
+          example: House
+        zipCode:
+          type: string
+          example: 9868756
+        city:
+          type: string
+          example: Lyon
+        Room:
+          type: array
+          items:
+            $ref: '#/components/schemas/Room'
+    RelationalRoom:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 3
+        number:
+          type: number
+          example: 3
+        area:
+          type: string
+          format: Float
+          example: '3.5'
+        price:
+          type: number
+          example: 300
+        apartementId:
+          type: number
+          example: 4
+        Apartement:
+          $ref: '#/components/schemas/Apartement'
+    IDlessUser:
+      type: object
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+          example: John
+        lastName:
+          type: string
+          minLength: 1
+          example: Smith
+        phone:
+          type: string
+          example: 0607080504
+        email:
+          $ref: '#/components/schemas/Email'
+        birthDate:
+          type: string
+          format: date
+          example: '2002-10-11'
+        nationality:
+          type: string
+          example: 'american'
+    IDlessRelationalApartement:
+      type: object
+      properties:
+        street:
+          type: string
+          example: Street
+        name:
+          type: string
+          example: House
+        zipCode:
+          type: string
+          example: 9868756
+        city:
+          type: string
+          example: Lyon
+        Room:
+          type: array
+          items:
+            $ref: '#/components/schemas/Room'
+    IDlessRelationalRoom:
+      type: object
+      properties:
+        number:
+          type: number
+          example: 3
+        area:
+          type: string
+          format: Float
+          example: '3.5'
+        price:
+          type: number
+          example: 300
+        apartementId:
+          type: number
+          example: 4
+        Apartement:
+          $ref: '#/components/schemas/Apartement'
+
+  headers:
+    ExpiresAfter:
+      description: date in UTC when token expires
+      schema:
+        type: string
+        format: date-time
+  # Security scheme definitions that can be used across the definition.
+  securitySchemes:
+    main_auth: # security definition name (you can name it as you want)
+      # the following options are specific to oauth2 type
+      type: oauth2 # authorization type, one of: oauth2, apiKey, http
+      flows:
+        implicit:
+          authorizationUrl: 'http://example.com/api/oauth/dialog'
+          scopes:
+            'read:users': read users info
+            'write:users': modify or remove users
+    api_key: # security definition name (you can name it as you want)
+      type: apiKey
+      # The following options are specific to apiKey type
+      in: header # Where API key will be passed: header or query
+      name: api_key # API key parameter name
+    basic_auth: # security definition name (you can name it as you want)
+      type: http
+      scheme: basic
