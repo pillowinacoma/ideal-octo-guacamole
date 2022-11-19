@@ -5,6 +5,7 @@ import {
   createUserInputSchema,
   deleteUser,
   deleteUserInputSchema,
+  getUser,
   updateUser,
   updateUserInputSchema,
 } from './user'
@@ -18,9 +19,11 @@ import {
   getApartement,
 } from './apartement'
 import { getApartementInputSchema } from './apartement/schema'
+import { getUserWithEmailSchema } from './user/schema/get-user'
 
 const router = express.Router()
 
+router.get('/user/:email', validate(getUserWithEmailSchema), getUser)
 router.post('/user', validate(createUserInputSchema), createUser)
 router.put('/user', validate(updateUserInputSchema), updateUser)
 router.delete('/user', validate(deleteUserInputSchema), deleteUser)
