@@ -1,4 +1,3 @@
-import cors from "cors"
 import express from "express"
 import env from "./env"
 
@@ -21,7 +20,6 @@ app.use(express.json())
  * On dit à Express que l'on souhaite autoriser tous les noms de domaines
  * à faire des requêtes sur notre API.
  */
-app.use(cors())
 
 /**
  * Homepage (uniquement necessaire pour cette demo)
