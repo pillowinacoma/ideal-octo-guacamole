@@ -50,7 +50,7 @@ paths:
       summary: Create user
       operationId: createUser
       responses:
-        '200':
+        '201':
           description: OK
           content:
             application/json:
@@ -161,7 +161,7 @@ paths:
       summary: Create Apartement
       operationId: createApartement
       responses:
-        '200':
+        '201':
           description: OK
           content:
             application/json:
@@ -243,7 +243,7 @@ paths:
       summary: Create Room
       operationId: createRoom
       responses:
-        '200':
+        '201':
           description: OK
           content:
             application/json:
@@ -325,7 +325,7 @@ paths:
       summary: Create Reservation
       operationId: createReservation
       responses:
-        '200':
+        '201':
           description: OK
           content:
             application/json:
