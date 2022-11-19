@@ -1,25 +1,19 @@
 import express from 'express'
 import { validate } from './schema-validation'
+import { createUser, deleteUser, getUser, updateUser } from './user'
 import {
-  createUser,
   createUserInputSchema,
-  deleteUser,
-  deleteUserInputSchema,
-  getUser,
-  updateUser,
   updateUserInputSchema,
-} from './user'
+  deleteUserInputSchema,
+  getUserInputSchema,
+} from './user/schema'
+import { deleteApartement, createApartement, updateApartement, getApartement } from './apartement'
 import {
-  deleteApartement,
-  deleteApartementInputSchema,
-  createApartement,
   createApartementInputSchema,
-  updateApartement,
+  deleteApartementInputSchema,
+  getApartementInputSchema,
   updateApartementInputSchema,
-  getApartement,
-} from './apartement'
-import { getApartementInputSchema } from './apartement/schema'
-import { getUserWithEmailSchema } from './user/schema/get-user'
+} from './apartement/schema'
 import { createRoom, deleteRoom, getRoom, updateRoom } from './room'
 import {
   createRoomInputSchema,
@@ -30,7 +24,7 @@ import {
 
 const router = express.Router()
 
-router.get('/user/:email', validate(getUserWithEmailSchema), getUser)
+router.get('/user/:email', validate(getUserInputSchema), getUser)
 router.post('/user', validate(createUserInputSchema), createUser)
 router.put('/user/:email', validate(updateUserInputSchema), updateUser)
 router.delete('/user/:email', validate(deleteUserInputSchema), deleteUser)

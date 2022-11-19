@@ -3,7 +3,7 @@ import { RequestHandler } from 'express'
 import { z } from 'zod'
 import { RHWithBody, RHWithParams } from '../../types'
 import { createUserInputSchema, deleteUserInputSchema, updateUserInputSchema } from './schema'
-import { getUserWithEmailSchema } from './schema/get-user'
+import { getUserInputSchema } from './schema/get-user'
 import { handleError } from './utils'
 
 const prisma = new PrismaClient()
@@ -53,7 +53,7 @@ export const deleteUser: RHWithParams<deleteUserParamsType> = async (req, res) =
   else res.status(404).send()
 }
 
-type getUserParamsType = z.infer<typeof getUserWithEmailSchema>['params']
+type getUserParamsType = z.infer<typeof getUserInputSchema>['params']
 
 export const getUser: RHWithParams<getUserParamsType> = async (req, res) => {
   const { email } = req.params
@@ -67,4 +67,3 @@ export const getUser: RHWithParams<getUserParamsType> = async (req, res) => {
   if (user) res.status(200).send({ user })
   else res.status(404).send()
 }
-export { createUserInputSchema, updateUserInputSchema, deleteUserInputSchema }

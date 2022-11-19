@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const getUserWithEmailSchema = z.object({
+export const getUserInputSchema = z.object({
   params: z
     .object({
       email: z.string().email(),
