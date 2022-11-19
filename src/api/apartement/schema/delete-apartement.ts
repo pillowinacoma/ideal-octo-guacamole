@@ -1,11 +1,10 @@
 import { z } from 'zod'
+import { regExIsNumber } from '../utils'
 
-const idSchema = z.number({
-  required_error: 'a valid appartenet id is required',
-})
+const idSchema = z.string().regex(regExIsNumber)
 
 export const deleteApartementInputSchema = z.object({
-  body: z
+  params: z
     .object({
       id: idSchema,
     })

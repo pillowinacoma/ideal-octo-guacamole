@@ -2,6 +2,9 @@ import { z } from 'zod'
 import { isDateString, isPhoneNumber } from '../utils'
 
 export const updateUserInputSchema = z.object({
+  params: z.object({
+    email: z.string().email(),
+  }),
   body: z
     .object({
       firstName: z.string({}).optional(),

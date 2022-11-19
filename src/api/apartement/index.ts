@@ -9,11 +9,12 @@ import {
   updateApartementInputSchema,
 } from './schema'
 import { handleError } from './utils'
+import { RequestHandler } from 'express'
 
 const prisma = new PrismaClient()
 
-type createApartementInputType = z.infer<typeof createApartementInputSchema>['body']
-export const createApartement: RHWithBody<createApartementInputType> = async (req, res) => {
+type createApartementBodyType = z.infer<typeof createApartementInputSchema>['body']
+export const createApartement: RHWithBody<createApartementBodyType> = async (req, res) => {
   const apartement = await prisma.apartement
     .create({
       data: {
@@ -25,25 +26,32 @@ export const createApartement: RHWithBody<createApartementInputType> = async (re
   if (apartement) res.status(201).send({ apartement })
 }
 
-type deleteApartementInputType = z.infer<typeof deleteApartementInputSchema>['body']
-export const deleteApartement: RHWithBody<deleteApartementInputType> = async (req, res) => {
+type deleteApartementParamsType = z.infer<typeof deleteApartementInputSchema>['params']
+export const deleteApartement: RHWithParams<deleteApartementParamsType> = async (req, res) => {
+  const { id } = req.params
   const apartement = await prisma.apartement
     .delete({
       where: {
-        ...req.body,
+        id: Number(id),
       },
     })
     .catch(handleError(res))
   if (apartement) res.status(201).send({ apartement })
 }
 
-type updateApartementInputType = z.infer<typeof updateApartementInputSchema>['body']
-export const updateApartement: RHWithBody<updateApartementInputType> = async (req, res) => {
-  const { id, ...rest } = req.body
+type updateApartementParamsType = z.infer<typeof updateApartementInputSchema>['params']
+type updateApartementBodyType = z.infer<typeof updateApartementInputSchema>['body']
+export const updateApartement: RequestHandler<
+  updateApartementParamsType,
+  {},
+  updateApartementBodyType
+> = async (req, res) => {
+  const { id } = req.params
+  const { ...rest } = req.body
   const apartement = await prisma.apartement
     .update({
       where: {
-        id,
+        id: Number(id),
       },
       data: {
         ...rest,
@@ -53,8 +61,8 @@ export const updateApartement: RHWithBody<updateApartementInputType> = async (re
   if (apartement) res.status(201).send({ apartement })
 }
 
-type getApartementInputType = z.infer<typeof getApartementInputSchema>['params']
-export const getApartement: RHWithParams<getApartementInputType> = async (req, res) => {
+type getApartementParamsType = z.infer<typeof getApartementInputSchema>['params']
+export const getApartement: RHWithParams<getApartementParamsType> = async (req, res) => {
   const { id } = req.params
   const apartement = await prisma.apartement
     .findUnique({

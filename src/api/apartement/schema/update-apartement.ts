@@ -1,10 +1,7 @@
-import { z } from 'zod'
-import { isZipCode } from '../utils'
+import { string, z } from 'zod'
+import { regExIsNumber, regExIsZipCode } from '../utils'
 
-const idSchema = z.number({
-  required_error: 'a valid appartenet id is required',
-})
-
+const idSchema = string().regex(regExIsNumber)
 const nameSchema = z
   .string({
     required_error: 'name is required',
@@ -19,7 +16,7 @@ const zipCodeSchema = z
   .string({
     required_error: 'zipCode is required',
   })
-  .regex(isZipCode)
+  .regex(regExIsZipCode)
   .optional()
 const citySchema = z
   .string({
@@ -28,9 +25,11 @@ const citySchema = z
   .optional()
 
 export const updateApartementInputSchema = z.object({
+  params: z.object({
+    id: idSchema,
+  }),
   body: z
     .object({
-      id: idSchema,
       name: nameSchema,
       street: streetSchema,
       zipCode: zipCodeSchema,
