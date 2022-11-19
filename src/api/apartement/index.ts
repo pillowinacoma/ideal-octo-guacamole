@@ -28,6 +28,7 @@ export const createApartement: RHWithBody<createApartementBodyType> = async (req
     .catch(handleError(res))
 
   if (apartement) res.status(201).send({ apartement })
+  else res.status(404).send()
 }
 
 type deleteApartementParamsType = z.infer<typeof deleteApartementInputSchema>['params']
@@ -40,7 +41,8 @@ export const deleteApartement: RHWithParams<deleteApartementParamsType> = async 
       },
     })
     .catch(handleError(res))
-  if (apartement) res.status(201).send({ apartement })
+  if (apartement) res.status(200).send({ apartement })
+  else res.status(404).send()
 }
 
 type updateApartementParamsType = z.infer<typeof updateApartementInputSchema>['params']
@@ -66,7 +68,8 @@ export const updateApartement: RequestHandler<
       include: { Room: {} },
     })
     .catch(handleError(res))
-  if (apartement) res.status(201).send({ apartement })
+  if (apartement) res.status(200).send({ apartement })
+  else res.status(404).send()
 }
 
 type getApartementParamsType = z.infer<typeof getApartementInputSchema>['params']
@@ -80,6 +83,7 @@ export const getApartement: RHWithParams<getApartementParamsType> = async (req, 
       include: { Room: {} },
     })
     .catch(handleError(res))
-  if (apartement) res.status(201).send({ apartement })
+  if (apartement) res.status(200).send({ apartement })
+  else res.status(404).send()
 }
 export { createApartementInputSchema, deleteApartementInputSchema, updateApartementInputSchema }

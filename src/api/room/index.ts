@@ -86,7 +86,7 @@ export const updateRoom: RequestHandler<updateRoomParamsType, {}, updateRoomBody
       },
     })
     .catch(handleError(res))
-  if (updatedRoom) res.status(201).send({ room: updatedRoom })
+  if (updatedRoom) res.status(200).send({ room: updatedRoom })
   else res.status(500).send()
 }
 
@@ -126,7 +126,7 @@ export const deleteRoom: RHWithParams<deleteRoomParamsType> = async (req, res) =
       },
     })
     .catch(handleError(res))
-  if (deletedRoom) res.status(201).send({ room: deletedRoom })
+  if (deletedRoom) res.status(200).send({ room: deletedRoom })
   else res.status(500).send()
 }
 
@@ -175,6 +175,6 @@ export const deleteReservation: RequestHandler<deleteReservationParamsType, {}, 
       },
     })
     .catch(handleError(res))
-  if (reservation) res.status(201).send({ reservation })
+  if (reservation) res.status(200).send({ reservation })
   else res.status(500).send()
 }

@@ -36,7 +36,7 @@ export const updateUser: RequestHandler<updateUserParamsType, {}, updateUserBody
       data: { ...req.body },
     })
     .catch(handleError(res))
-  if (user) res.status(201).send({ user })
+  if (user) res.status(200).send({ user })
   else res.status(404).send()
 }
 
@@ -49,7 +49,7 @@ export const deleteUser: RHWithParams<deleteUserParamsType> = async (req, res) =
       where: { email },
     })
     .catch(handleError(res))
-  if (user) res.status(201).send({ user })
+  if (user) res.status(200).send({ user })
   else res.status(404).send()
 }
 
