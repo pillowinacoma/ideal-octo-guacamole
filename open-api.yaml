@@ -38,7 +38,8 @@ tags:
     description: make and delete
 servers:
   - url: 'https://ideal-octo-guacamole.onrender.com/api'
-  - url: 'localhost:3000/api'
+  - url: 'http://localhost:3000/api'
+  - url: 'http://localhost:4000/api'
 
 # Holds the relative paths to the individual endpoints. The path is appended to the
 # basePath in order to construct the full URL.
@@ -176,7 +177,35 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IDlessRelationalApartement'
+              type: object
+              properties:
+                street:
+                  type: string
+                  example: Street
+                name:
+                  type: string
+                  example: House
+                zipCode:
+                  type: string
+                  example: 9868756
+                city:
+                  type: string
+                  example: Lyon
+                rooms:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      number:
+                        type: number
+                        example: 3
+                      area:
+                        type: string
+                        format: Float
+                        example: '3.5'
+                      price:
+                        type: number
+                        example: 300
         description: Created apartement object, all body attributes are required
         required: true
   '/apartement/{id}':
@@ -185,6 +214,13 @@ paths:
         - Apartement
       summary: get Apartement
       operationId: getApartement
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: number
       responses:
         '200':
           description: OK
@@ -201,6 +237,13 @@ paths:
         - Apartement
       summary: Update Apartement
       operationId: updateApartement
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: number
       responses:
         '200':
           description: OK
@@ -225,6 +268,13 @@ paths:
         - Apartement
       summary: Delete Apartement
       operationId: deleteApartement
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: number
       responses:
         '200':
           description: OK
@@ -267,6 +317,13 @@ paths:
         - Room
       summary: Update Room
       operationId: updateRoom
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: number
       responses:
         '200':
           description: OK
@@ -291,6 +348,13 @@ paths:
         - Room
       summary: Get Room
       operationId: getRoom
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: number
       responses:
         '200':
           description: OK
@@ -307,6 +371,13 @@ paths:
         - Room
       summary: Delete Room
       operationId: deleteRoom
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: number
       responses:
         '200':
           description: OK
@@ -324,6 +395,14 @@ paths:
         - Reservation
       summary: Create Reservation
       operationId: createReservation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Room ID
+          schema:
+            type: string
+            format: number
       responses:
         '201':
           description: OK
@@ -353,6 +432,14 @@ paths:
         - Reservation
       summary: Delete Reservation
       operationId: deleteReservation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Room ID
+          schema:
+            type: string
+            format: number
       responses:
         '200':
           description: OK
