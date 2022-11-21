@@ -87,7 +87,7 @@ This API is hosted [here](https://ideal-octo-guacamole.onrender.com/)
 You will fond the API docs in the `{{host}}/docs` route.
 
 - http://localhost:3000/docs by default on localhost
-- http://localhost:{{PORT}}/docs by default on localhost
+- http://localhost:{{PORT}}/docs 
 - https://ideal-octo-guacamole.onrender.com/docs hosted on render
 
 # Libraries
